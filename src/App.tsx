@@ -83,7 +83,9 @@ class App extends Component<{}, State> {
     }));
   }
   render() {
+    console.log(this.state.cohorts);
     const stackData = getStackData(this.state.cohorts, this.state.months);
+    console.log(stackData);
     const { showSidebar } = this.state;
     return (
       <Grommet theme={theme} full>
@@ -137,7 +139,10 @@ class App extends Component<{}, State> {
                 </Box>
                 <Box />
                 {!showSidebar || size !== "small" ? (
-                  <Collapsible direction="horizontal" open={showSidebar}>
+                  <Collapsible
+                    direction="horizontal"
+                    open={this.state.showSidebar}
+                  >
                     <Box
                       flex
                       width="large"
@@ -146,9 +151,74 @@ class App extends Component<{}, State> {
                       align="center"
                       justify="center"
                     >
-                      <div>Test</div>
-                      <div>Test</div>
-                      <div>Test</div>>
+                      <Grid>
+                        <DataTable
+                          columns={[
+                            {
+                              property: "name",
+                              header: <Text>Name</Text>,
+                              primary: true
+                            },
+                            {
+                              property: "montlyUser",
+                              header: <Text>Growth</Text>,
+                              primary: true
+                            },
+                            {
+                              property: "churn",
+                              header: <Text>Churn</Text>,
+                              primary: true
+                            },
+                            {
+                              property: "id",
+                              primary: true,
+                              render: cohort => (
+                                <Button
+                                  icon={<Trash />}
+                                  onClick={() => this.deleteCohort(cohort.id)}
+                                />
+                              )
+                            }
+                          ]}
+                          data={this.state.cohorts}
+                        />
+                        <Form
+                          onSubmit={(event: SyntheticEvent) => {
+                            console.log(event);
+                            this.setState(prevState => {
+                              return {
+                                ...prevState,
+                                cohorts: prevState.cohorts.concat([
+                                  {
+                                    //@ts-ignore
+                                    name: event.value.name,
+                                    //@ts-ignore
+                                    id: event.value.name,
+                                    //@ts-ignore
+                                    churn: event.value.monthlyChurn,
+                                    //@ts-ignore
+                                    montlyUser: event.value.monthlyGrowth
+                                  }
+                                ])
+                              };
+                            });
+                          }}
+                        >
+                          <Heading level="3" margin="none">
+                            Add cohort
+                          </Heading>
+                          <FormField name="name" label="Name" />
+                          <FormField
+                            name="monthlyGrowth"
+                            label="Monthly user growth"
+                          />
+                          <FormField
+                            name="monthlyChurn"
+                            label="Monthly churn"
+                          />
+                          <Button type="submit" primary label="Submit" />
+                        </Form>
+                      </Grid>
                     </Box>
                   </Collapsible>
                 ) : (
@@ -199,7 +269,6 @@ class App extends Component<{}, State> {
                         />
                         <Form
                           onSubmit={(event: SyntheticEvent) => {
-                            console.log(event);
                             this.setState(prevState => {
                               return {
                                 ...prevState,
@@ -209,10 +278,14 @@ class App extends Component<{}, State> {
                                     name: event.value.name,
                                     //@ts-ignore
                                     id: event.value.name,
-                                    //@ts-ignore
-                                    churn: event.value.monthlyChurn,
-                                    //@ts-ignore
-                                    montlyUser: event.value.monthlyGrowth
+                                    churn: this.parseInput(
+                                      //@ts-ignore
+                                      event.value.monthlyChurn
+                                    ),
+                                    montlyUser: this.parseInput(
+                                      //@ts-ignore
+                                      event.value.monthlyGrowth
+                                    )
                                   }
                                 ])
                               };
