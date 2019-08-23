@@ -1,7 +1,7 @@
 import { Cohort } from "./App";
 
 export function churnA(x: number, fallOff: number): number {
-  return x * (1 - fallOff);
+  return x * (1 - fallOff / 100);
 }
 
 export function getData(

@@ -66,9 +66,9 @@ class App extends Component<{}, State> {
   state = {
     showSidebar: false,
     cohorts: [
-      { id: "1", name: "A", montlyUser: 100, churn: 0.3 },
-      { id: "2", name: "B", montlyUser: 50, churn: 0.1 },
-      { id: "3", name: "C", montlyUser: 100, churn: 0.2 }
+      { id: "1", name: "A", montlyUser: 100, churn: 30 },
+      { id: "2", name: "B", montlyUser: 50, churn: 10 },
+      { id: "3", name: "C", montlyUser: 100, churn: 20 }
     ],
     months: 24
   };
@@ -129,7 +129,7 @@ class App extends Component<{}, State> {
                         },
                         {
                           property: "churn",
-                          header: <Text>Monthly churn</Text>,
+                          header: <Text>Monthly churn (%)</Text>,
                           primary: true
                         }
                       ]}
@@ -302,7 +302,7 @@ class App extends Component<{}, State> {
                           />
                           <FormField
                             name="monthlyChurn"
-                            label="Monthly churn"
+                            label="Monthly churn (%)"
                           />
                           <Button type="submit" primary label="Submit" />
                         </Form>
